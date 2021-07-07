@@ -18,24 +18,17 @@ if (!empty($_COOKIE['shibb_remember'])) {
     exit;
 }
 
-//HTTPS is required in this page when $CFG->loginhttps enabled
-$PAGE->https_required();
-
 $context = context_system::instance();
-$PAGE->set_url("$CFG->httpswwwroot/local/login-multi/index.php");
+$PAGE->set_url("$CFG->wwwroot/local/up1_loginmulti/index.php");
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('login');
-$PAGE->requires->css(new moodle_url('/local/login-multi/login.css'));
+$PAGE->requires->css(new moodle_url('/local/up1_loginmulti/login.css'));
 
 $site = get_site();
 $loginsite = get_string("loginsite");
 $shiburl = new moodle_url('/auth/shibboleth/');
 
 $PAGE->navbar->add($loginsite);
-
-// make sure we really are on the https page when https login required
-$PAGE->verify_https_required();
-
 $PAGE->set_title("$site->fullname: $loginsite");
 $PAGE->set_heading($site->fullname);
 
@@ -106,8 +99,8 @@ echo $OUTPUT->header();
 if (isloggedin() and !isguestuser()) {
     // prevent logging when already logged in, we do not want them to relogin by accident because sesskey would be changed
     echo $OUTPUT->box_start();
-    $logout = new single_button(new moodle_url($CFG->httpswwwroot.'/login/logout.php', array('sesskey'=>sesskey(),'loginpage'=>1)), get_string('logout'), 'post');
-    $continue = new single_button(new moodle_url($CFG->httpswwwroot.'/login/index.php', array('cancel'=>1)), get_string('cancel'), 'get');
+    $logout = new single_button(new moodle_url($CFG->wwwroot.'/login/logout.php', ['sesskey'=>sesskey(),'loginpage'=>1]), get_string('logout'), 'post');
+    $continue = new single_button(new moodle_url($CFG->wwwroot.'/login/index.php', ['cancel'=>1]), get_string('cancel'), 'get');
     echo $OUTPUT->confirm(get_string('alreadyloggedin', 'error', fullname($USER)), $logout, $continue);
     echo $OUTPUT->box_end();
 }
@@ -148,7 +141,9 @@ function display_local_login() {
         $show_instructions = false;
     }
 
-    require $CFG->dirroot . "/login/index_form.html";
+    // pre-3.9 : // require $CFG->dirroot . "/login/index_form.html";
+    // cf. https://tracker.moodle.org/browse/MDL-29940
+    // require $CFG->dirroot . "/login/index.php";
     if ($errormsg) {
         $PAGE->requires->js_init_call('M.util.focus_login_error', null, true);
     } else if (!empty($CFG->loginpageautofocus)) {

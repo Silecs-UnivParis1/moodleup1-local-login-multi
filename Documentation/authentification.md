@@ -1,6 +1,6 @@
 # Authentification
 
-La page de login multi-sources est installée par le module local_login-multi.
+La page de login multi-sources est installée par le module local_up1_loginmulti.
 
 Elle permet l'authentification via
 
@@ -8,7 +8,7 @@ Elle permet l'authentification via
  2.  un compte Shibboleth externe, avec choix WAYF
  3.  un compte local ("Un compte invité"), correspondant à un compte manuel
 
-Elle est accessible (par exemple) à <https://moodle-test.univ-paris1.fr/local/login-multi/index.php>.
+Elle est accessible (par exemple) à <https://moodle-test.univ-paris1.fr/local/up1_loginmulti/index.php>.
 
 
 Cette fonctionalité est implémentée par l'utilisation du paramètre global `alternateloginurl`,
