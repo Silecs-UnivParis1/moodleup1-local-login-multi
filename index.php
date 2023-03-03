@@ -99,20 +99,68 @@ echo $OUTPUT->header();
 if (isloggedin() and !isguestuser()) {
     // prevent logging when already logged in, we do not want them to relogin by accident because sesskey would be changed
     echo $OUTPUT->box_start();
-    $logout = new single_button(new moodle_url($CFG->wwwroot.'/login/logout.php', ['sesskey'=>sesskey(),'loginpage'=>1]), get_string('logout'), 'post');
-    $continue = new single_button(new moodle_url($CFG->wwwroot.'/login/index.php', ['cancel'=>1]), get_string('cancel'), 'get');
+    $logout = new single_button(new moodle_url($CFG->httpswwwroot.'/login/logout.php', array('sesskey'=>sesskey(),'loginpage'=>1)), get_string('logout'), 'post');
+    $continue = new single_button(new moodle_url($CFG->httpswwwroot.'/login/index.php', array('cancel'=>1)), get_string('cancel'), 'get');
     echo $OUTPUT->confirm(get_string('alreadyloggedin', 'error', fullname($USER)), $logout, $continue);
     echo $OUTPUT->box_end();
 }
 
 
+echo $OUTPUT->heading("Se connecter avec :", 2, '');
+
+echo $OUTPUT->box_start('generalbox shiblogin first');
+echo $OUTPUT->heading("Votre compte Paris 1", 3);
+?>
+<div class="loginbox clearfix onecolumn">
+<form name="login-up1" id="login-up1" method="post" action="<?php echo $shiburl; ?>login.php">
+    <div class="form-submit">
+        <input type="hidden" name="idp" value="<?php echo SHIBB_DEFAULT_IDP; ?>" />
+        <button type="submit">Valider</button>
+    </div>
+    <div class="form-input">
+        <label>
+            <input name="session" class="shibb_remember" type="checkbox" />
+            Se souvenir de mon choix pour cette session
+        </label>
+        <label>
+            <input name="always" class="shibb_remember" type="checkbox" />
+            Se souvenir de mon choix définitivement
+        </label>
+    </div>
+</form>
+</div>
+<?php
+echo $OUTPUT->box_end();
+
+echo $OUTPUT->box_start('generalbox shiblogin');
+echo $OUTPUT->heading("Les identifiants d'un autre établissement", 3);
+?>
+<div class="loginbox clearfix onecolumn">
+<form name="login-other" id="login-other" method="post" action="<?php echo $shiburl; ?>login.php">
+    <div class="form-submit">
+        <button type="submit">Valider</button>
+    </div>
+    <div class="form-input">
+        <select name="idp" id="idp">
+            <option value="">Sélectionner un établissement…</option>
+            <?php print_idp_list(); ?>
+        </select>
+    </div>
+</form>
+</div>
+<?php
+echo $OUTPUT->box_end();
+
+echo '<div id="local-login">';
 echo $OUTPUT->box_start('generalbox local-login');
-echo $OUTPUT->heading("Vous avez un compte invité", 3, 'main', 'local-login-title');
+echo '<div id="toggle-local">&#x25BD;</div>';
+echo $OUTPUT->heading("Un compte invité", 3, 'main', 'local-login-title');
 display_local_login();
 echo $OUTPUT->box_end();
 echo "</div>";
 
 echo $OUTPUT->footer();
+
 
 function display_local_login() {
     global $CFG, $PAGE, $OUTPUT;
